@@ -1,7 +1,39 @@
+his.didChangeDraftReply.fire();
+			this.fireDidUpdateThreadEvent();
+		}
+	}
 
+	private _displayRange: DisplayRange;
+	private didChangeDisplayRange = this.disposable(new Emitter<void>());
+	public readonly onDidChangeDisplayRange = this.didChangeDisplayRange.event;
+	public get displayRange(): DisplayRange { return this._displayRange; }
+	public set displayRange(displayRange: DisplayRange) {
+		if (this._displayRange !== displayRange) {
+			this._displayRange = displayRange;
+			this.didChangeDisplayRange.fire();
+		}
+	}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum dictum leo ac leo condimentum, vel mollis ipsum blandit. Donec fermentum aliquet magna eget tincidunt. Proin a maximus nisi, quis faucibus massa. Mauris suscipit vel risus in accumsan. Aenean erat turpis, tincidunt in accumsan vitae, mattis at arcu. Cras aliquam urna at neque gravida, id dictum purus finibus. Vestibulum laoreet nulla eu orci efficitur eleifend.
+	public get mostRecentComment(): IComment {
+		return this.comments[this.comments.length - 1];
+	}
 
-Donec at metus nibh. Phasellus vitae justo eu urna eleifend consectetur vitae sed est. In hac habitasse platea dictumst. Praesent quis nisi ut augue tincidunt blandit. Nulla vitae metus gravida, porttitor eros sed, porta velit. Aenean gravida lacinia varius. In felis magna, condimentum eu erat id, volutpat imperdiet diam.
-
-Nu
+	constructor(
+		private commentsService: CodeCommentsService,
+		thread: IThreadCommentsMemento,
+		resource: URI,
+		@IRemoteService private remoteService: IRemoteService,
+	) {
+		super();
+		this.id = thread.id;
+		this.title = thread.title;
+		this.file = thread.file;
+		this.branch = thread.branch;
+		this.repoRevision = thread.repoRevision;
+		this.linesRevision = thread.linesRevision;
+		this.resource = resource;
+		this.range = thread.range;
+		this.createdAt = thread.createdAt;
+		this.archived = thread.archived;
+		this._comments = thread.comments;
+		this.canonica
