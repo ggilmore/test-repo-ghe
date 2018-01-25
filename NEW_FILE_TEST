@@ -1,0 +1,39 @@
+his.didChangeDraftReply.fire();
+			this.fireDidUpdateThreadEvent();
+		}
+	}
+
+	private _displayRange: DisplayRange;
+	private didChangeDisplayRange = this.disposable(new Emitter<void>());
+	public readonly onDidChangeDisplayRange = this.didChangeDisplayRange.event;
+	public get displayRange(): DisplayRange { return this._displayRange; }
+	public set displayRange(displayRange: DisplayRange) {
+		if (this._displayRange !== displayRange) {
+			this._displayRange = displayRange;
+			this.didChangeDisplayRange.fire();
+		}
+	}
+
+	public get mostRecentComment(): IComment {
+		return this.comments[this.comments.length - 1];
+	}
+
+	constructor(
+		private commentsService: CodeCommentsService,
+		thread: IThreadCommentsMemento,
+		resource: URI,
+		@IRemoteService private remoteService: IRemoteService,
+	) {
+		super();
+		this.id = thread.id;
+		this.title = thread.title;
+		this.file = thread.file;
+		this.branch = thread.branch;
+		this.repoRevision = thread.repoRevision;
+		this.linesRevision = thread.linesRevision;
+		this.resource = resource;
+		this.range = thread.range;
+		this.createdAt = thread.createdAt;
+		this.archived = thread.archived;
+		this._comments = thread.comments;
+		this.canonica
